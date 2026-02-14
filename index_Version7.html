@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para ti, Laura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #4b0081 0%, #56008c 25%, #620096 50%, #8d00a1 75%, #7900ac 100%);
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .crown-l {
+            display: inline-block;
+            position: relative;
+        }
+
+        .crown-l::before {
+            content: '👑';
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .header p {
+            font-size: 1.4em;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+
+        .header-quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #ffb6f0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+        }
+
+        .gifts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            max-width: 1200px;
+            margin-bottom: 80px;
+            padding: 0 20px;
+        }
+
+        .gift {
+            width: 130px;
+            height: 150px;
+            background: linear-gradient(135deg, #9032bb 0%, #af69cd 100%);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .gift:hover {
+            transform: scale(1.15) translateY(-10px);
+            box-shadow: 0 15px 40px rgba(201, 13, 239, 0.5);
+        }
+
+        /* Moño del regalo */
+        .gift::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 35px;
+            background: linear-gradient(90deg, #cb0def 0%, #e669f5 50%, #cb0def 100%);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Listón del regalo */
+        .gift::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(90deg, #cb0def 0%, #e669f5 50%, #cb0def 100%);
+            z-index: 1;
+            box-shadow: inset 2px 0 4px rgba(0,0,0,0.2);
+        }
+
+        .gift-number {
+            font-size: 4em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            z-index: 3;
+            position: relative;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+            height: 650px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(60px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+
+        .modal-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 45px 35px;
+            color: white;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .artist-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ffb6f0;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+            letter-spacing: 1px;
+        }
+
+        .quote-text {
+            font-size: 1.15em;
+            font-style: italic;
+            line-height: 1.7;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255,255,255,0.95);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.8em;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .close-btn:hover {
+            background: white;
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 40px 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .header-quote {
+                font-size: 1em;
+                margin-bottom: 40px;
+            }
+
+            .gifts-container {
+                gap: 25px;
+                margin-bottom: 60px;
+            }
+
+            .gift {
+                width: 110px;
+                height: 130px;
+            }
+
+            .gift-number {
+                font-size: 3.5em;
+            }
+
+            .modal-content {
+                height: 550px;
+            }
+
+            .modal-text {
+                padding: 35px 25px;
+            }
+
+            .artist-name {
+                font-size: 1.2em;
+            }
+
+            .quote-text {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .gifts-container {
+                gap: 20px;
+            }
+
+            .gift {
+                width: 95px;
+                height: 115px;
+            }
+
+            .gift-number {
+                font-size: 3em;
+            }
+
+            .modal-content {
+                height: 480px;
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span class="crown-l">L</span> aura preciosa 💝</h1>
+        <p>Abre cada regalo</p>
+        <div class="header-quote">Pero si es por ti, yo viajo al infinito y le encuentro algun final ✨</div>
+    </div>
+
+    <div class="gifts-container">
+        <div class="gift" onclick="openModal(0)"><span class="gift-number">1</span></div>
+        <div class="gift" onclick="openModal(1)"><span class="gift-number">2</span></div>
+        <div class="gift" onclick="openModal(2)"><span class="gift-number">3</span></div>
+        <div class="gift" onclick="openModal(3)"><span class="gift-number">4</span></div>
+        <div class="gift" onclick="openModal(4)"><span class="gift-number">5</span></div>
+        <div class="gift" onclick="openModal(5)"><span class="gift-number">6</span></div>
+        <div class="gift" onclick="openModal(6)"><span class="gift-number">7</span></div>
+        <div class="gift" onclick="openModal(7)"><span class="gift-number">8</span></div>
+        <div class="gift" onclick="openModal(8)"><span class="gift-number">9</span></div>
+        <div class="gift" onclick="openModal(9)"><span class="gift-number">10</span></div>
+        <div class="gift" onclick="openModal(10)"><span class="gift-number">11</span></div>
+    </div>
+
+    <div id="modal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" class="modal-image" src="" alt="Foto">
+            <div class="modal-overlay"></div>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div class="modal-text">
+                <div class="artist-name" id="artistName"></div>
+                <div class="quote-text" id="quoteText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quotes = [
+            {
+                artist: "Antoine de Saint-Exupéry",
+                text: '"Amar no es mirarse el uno al otro; es mirar juntos en la misma dirección."',
+                image: "img/IMG_1476.PNG"
+            },
+            {
+                artist: "Eden Muñoz",
+                text: "Te volvería a elegir en esta vida y en las siguientes. Hacernos viejos y amarte eternamente.",
+                image: "img/IMG_1474.PNG"
+            },
+            {
+                artist: "Jarabe de Palo",
+                text: "Así que gracias por estar, por tu amistad y tu compañía. Eres lo, lo mejor que me ha dado la vida.",
+                image: "img/IMG_1465.PNG"
+            },
+            {
+                artist: "Gera MX",
+                text: 'Traigo planes de volverme tu persona favorita. Cuando nuestros labios rozan, pienso: "vida tan bendita".',
+                image: "img/IMG_1466.PNG"
+            },
+            {
+                artist: "Morat",
+                text: "Sabiendo que tus besos matan, moriré de amor.",
+                image: "img/IMG_1467.PNG"
+            },
+            {
+                artist: "Leo Larregui",
+                text: "Dame solo un beso que me alcance hasta morir. Y como un vicio que me duele, quiero mirarte a los ojos.",
+                image: "img/IMG_1468.PNG"
+            },
+            {
+                artist: "Café Tacvba",
+                text: "Es que sin ti, estoy muerto, pues eres lo que más quiero en este mundo, eso eres.",
+                image: "img/IMG_1469.PNG"
+            },
+            {
+                artist: "Alejandro Ojeda Arriaga",
+                text: "Quiero ser el amor de tu alma, el calor de tu cama, y sentir tus caricias.",
+                image: "img/IMG_1470.PNG"
+            },
+            {
+                artist: "Ale Sergi",
+                text: "Éramos tan buenos amigos hasta hoy que yo probé tu desempeño en el amor.",
+                image: "img/IMG_1471.PNG"
+            },
+            {
+                artist: "Juan Lugo",
+                text: "Lo admito te deseo y serán lindo hasta el pecar. Ser tu amigo amante y algo más, es todo lo que quiero.",
+                image: "img/IMG_1472.PNG"
+            },
+            {
+                artist: "David Summers",
+                text: "Tú estás dormida y yo te abrazo y siento que respiras. Sueño con tu sonrisa, te beso muy despacio las mejillas.",
+                image: "img/IMG_1473.PNG"
+            }
+        ];
+
+        function openModal(index) {
+            const quote = quotes[index];
+            document.getElementById('modalImage').src = quote.image;
+            document.getElementById('artistName').textContent = quote.artist;
+            document.getElementById('quoteText').textContent = quote.text;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== document.getElementById('modal')) return;
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
